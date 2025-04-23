@@ -1,0 +1,220 @@
+from tkinter import*
+from tkinter import ttk
+from tkinter import messagebox
+import mysql.connector
+
+
+class students:
+    def __init__(self,root):
+        self.root=root
+        self.root.title("STUDENT LOGIN REGISTRATION FORM")
+
+        self.root.geometry("1500x1000")
+        self.root.configure(bg="#82ccdd")
+
+
+
+        self.Admission_number=StringVar()
+        self.Rollnumber=StringVar()
+        self.Class=StringVar()
+        self.Section=StringVar()
+        self.Name_of_the_student=StringVar()
+        self.Sex=StringVar()
+        self.Date_of_Birth=StringVar()
+        self.Mother_name=StringVar()
+        self.Father_name=StringVar()
+        self.phone=StringVar()
+
+        labtitle=Label(self.root,text="STUDENT LOGIN REGISTRATION FORM",fg="#82ccdd",bg="#0a3d62",font=("algeria",20,"bold"),pady=10)
+        labtitle.pack(fill=X)
+        frame1=LabelFrame(self.root,text= "ENTER DATA ",font=("algeria",15,"bold","underline"),bg="#38ada9",highlightbackground="black",highlightthickness=2,padx=20,pady=20)
+        frame1.place(x=40,y=60)
+
+        def clear():
+            lab1.delete(0, END)
+            lab2.delete(0, END)
+            lab3.delete(0, END)
+            lab4.delete(0, END)
+            lab5.delete(0, END)
+            lab6.delete(0, END)
+            lab7.delete(0, END)
+            lab8.delete(0, END)
+            lab9.delete(0, END)
+            lab10.delete(0, END)
+            messagebox.askokcancel("message","Clear data successfull")
+
+        labcode = Label(frame1, text="Admission_number:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labcode.grid(row=1, column=2)
+        lab1 = Entry(frame1, textvariable=self.Admission_number,font=("algeria", 15, "bold"),)
+        lab1.grid(row=1, column=3)
+
+        labroll = Label(frame1, text="Rollnumber:", font=("algeria", 15, "bold"), bg="#38ada9",pady=10)
+        labroll.grid(row=2, column=2)
+        lab2 = Entry(frame1, textvariable=self.Rollnumber,font=("algeria", 15, "bold"))
+        lab2.grid(row=2, column=3)
+
+        labcl = Label(frame1, text="Class:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labcl.grid(row=3, column=2)
+        lab3 = Entry(frame1, textvariable=self.Class,font=("algeria", 15, "bold"))
+        lab3.grid(row=3, column=3)
+
+        labsec = Label(frame1, text="Section:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labsec.grid(row=4, column=2)
+        lab4 = Entry(frame1, textvariable=self.Section,font=("algeria", 15, "bold"))
+        lab4.grid(row=4, column=3)
+
+        labname = Label(frame1, text="Name_of_the_student:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labname.grid(row=5, column=2)
+        lab5 = Entry(frame1, textvariable=self.Name_of_the_student,font=("algeria", 15, "bold"))
+        lab5.grid(row=5, column=3)
+
+        labgender = Label(frame1, text="Sex:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labgender.grid(row=6, column=2)
+        lab6 = Entry(frame1, textvariable=self.Sex,font=("algeria", 15, "bold"))
+        lab6.grid(row=6, column=3)
+
+        labdob = Label(frame1, text="Date_of_Birth:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labdob.grid(row=7, column=2)
+        lab7 = Entry(frame1, textvariable=self.Date_of_Birth,font=("algeria", 15, "bold"))
+        lab7.grid(row=7, column=3)
+
+        labmother = Label(frame1, text="Mother_name:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labmother.grid(row=8, column=2)
+        lab8 = Entry(frame1, textvariable=self.Mother_name,font=("algeria", 15, "bold"))
+        lab8.grid(row=8, column=3)
+
+        labfather = Label(frame1, text="Father_name:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labfather.grid(row=9, column=2)
+        lab9 = Entry(frame1, textvariable=self.Father_name,font=("algeria", 15, "bold"))
+        lab9.grid(row=9, column=3)
+
+        labcontact = Label(frame1, text="phone:", font=("algeria", 15, "bold"),bg="#38ada9", pady=10)
+        labcontact.grid(row=10, column=2)
+        lab10 = Entry(frame1, textvariable=self.phone,font=("algeria", 15, "bold"))
+        lab10.grid(row=10, column=3)
+
+        btninsert = Button(self.root, text="INSERT", font=("Century", 15, "bold"), fg="#130f40", bg="#3c6382",
+                           command=self.insert)
+        btninsert.place(x=30,y=650)
+
+        btnclear = Button(self.root, text="CLEAR", font=("Century", 15, "bold"), fg="#130f40", bg="#3c6382",
+                          command=clear)
+        btnclear.place(x=150,y=650)
+
+
+        btnclear = Button(self.root, text="UPDATE", font=("Century", 15, "bold"), fg="#130f40", bg="#3c6382",
+                          command=self.update)
+        btnclear.place(x=260,y=650)
+
+        btnclear = Button(self.root, text="DELETE", font=("Century", 15, "bold"), fg="#130f40", bg="#3c6382",
+                          command=self.delete)
+        btnclear.place(x=380, y=650)
+
+        btnsearch = Button(self.root, text="SEARCH", font=("Century", 15, "bold"), fg="#130f40", bg="#3c6382",
+                          command=self.search)
+        btnsearch.place(x=500, y=650)
+
+        frame2=Frame(self.root,highlightbackground="#130f40",highlightthickness=2,bg="#ff7675")
+        frame2.place(x=600,y=150)
+        scroll=ttk.Scrollbar(frame2,orient=VERTICAL)
+        self.table=ttk.Treeview(frame2,columns=("Admission_number","Rollnumber","Class","Section","Name_of_the_student","Sex",
+                                                "Date_of_Birth","Mother_name","Father_name","phone"),yscrollcommand=scroll.set)
+        self.table.heading("Admission_number",text="Admission_number")
+        self.table.heading("Rollnumber",text="Rollnumber")
+        self.table.heading("Class",text="class")
+        self.table.heading("Section",text="Section")
+        self.table.heading("Name_of_the_student",text="student")
+        self.table.heading("Sex",text="gender")
+        self.table.heading("Date_of_Birth",text="DOB")
+        self.table.heading("Mother_name",text="Mother name")
+        self.table.heading("Father_name",text="Father name")
+        self.table.heading("phone",text="contact")
+        self.table.column("Admission_number",width=50)
+        self.table.column("Class",width=50)
+        self.table.column("Section",width=50)
+        self.table.column("Name_of_the_student",width=50)
+        self.table.column("Sex",width=50)
+        self.table.column("Date_of_Birth",width=50)
+        self.table.column("Mother_name",width=50)
+        self.table.column("Father_name",width=50)
+        self.table.column("phone",width=50)
+        self.table.pack()
+
+
+    def insert(self):
+        if self.Admission_number.get()=="":
+            messagebox.showerror("Error","all data must be required")
+        else:
+            s=mysql.connector.connect(
+                host="localhost",
+                user="root",
+                passwd="",
+                database="datano",
+            )
+            mycursor=s.cursor()
+            sql="insert into connect values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            user=(self.Admission_number.get(),self.Rollnumber.get(),self.Class.get(),self.Section.get(),
+                  self.Name_of_the_student.get(),self.Sex.get(),self.Date_of_Birth.get(),self.Mother_name.get(),
+                  self.Father_name.get(),self.phone.get())
+            mycursor.execute(sql,user)
+            s.commit()
+            s.close()
+            messagebox.showinfo("messsage","Insert data successfull")
+
+
+    def update(self):
+        s = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="datano",
+        )
+        mycursor = s.cursor()
+        sql=("update connect set Rollnumber=%s,Class=%s,Section=%s,"
+             "Name_of_the_student=%s,Sex=%s,Date_of_Birth=%s,Mother_name=%s,Father_name=%s,phone=%s")
+        user = ( self.Rollnumber.get(), self.Class.get(), self.Section.get(),
+                self.Name_of_the_student.get(), self.Sex.get(), self.Date_of_Birth.get(), self.Mother_name.get(),
+                self.Father_name.get(), self.phone.get())
+        mycursor.execute(sql, user)
+        s.commit()
+        s.close()
+        messagebox.showinfo("message","detailed are update sucessfully")
+
+
+    def delete(self):
+        s = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="datano",
+        )
+        mycursor = s.cursor()
+        sql="delete from connect where Admission_number=%s or Rollnumber=%s"
+        user=(self.Admission_number.get(),self.Rollnumber.get())
+        mycursor.execute(sql, user)
+        s.commit()
+        s.close()
+        messagebox.showinfo("message","Deleted data sucessfully")
+
+    def search(self):
+
+        s = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="datano",
+        )
+        mycursor = s.cursor()
+        Admission_number=self.Admission_number.get()
+        Section=self.Section.get()
+        sql="select* from connect where Admission_number=%s or Section=%s"
+        mycursor.execute(sql,(Admission_number, Section))
+        myresult=mycursor.fetchall()
+        for i in myresult:
+            self.table.insert("" ,END,values=i)
+            print(myresult)
+        s.close()
+        messagebox.showinfo("message","show data success")
+root=Tk()
+obj=students(root)
+root.mainloop()
